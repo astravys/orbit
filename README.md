@@ -2,6 +2,8 @@
 
 **ORBIT Builds Interconnected Topologies**
 
+Current version: [`v0.1.0-alpha.1`](https://github.com/lunarmolly/orbit-language/tree/v0.1.0-alpha.1)
+
 ORBIT is a human- and AI-friendly declarative language for describing structures, relationships, processes, timelines, and visual models.
 
 The language is designed to be:
@@ -49,6 +51,13 @@ The first implementation wave supports Database Schema models with:
 - `records`
 
 Every statement, including a block statement, ends with `;`.
+
+The current SVG renderer demonstrates the complete language pipeline but still
+needs visual polish. See [Wave 1 rendering notes](docs/rendering-notes.md).
+
+Pre-1.0 releases may change language syntax and public APIs. The first stable
+Wave 1 milestone will be `v0.1.0`; `v1.0.0` is reserved for a stable language
+specification and public API.
 
 ## Development
 
