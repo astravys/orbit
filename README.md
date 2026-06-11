@@ -8,36 +8,42 @@
 
 ## What is ORBIT?
 
-ORBIT is a human- and AI-friendly diagram modeling system.
+ORBIT is a human- and AI-friendly modeling system that turns structured text
+into diagrams and gives AI systems structured access to the same underlying
+model.
 
-People increasingly explore products, databases, software architectures, and
-workflows together with AI. Plain text works well at first, but complex ideas
-quickly become difficult to discuss without showing their structure and
-relationships.
+An ORBIT document is the source of truth. People can view it as a diagram, while
+AI agents and tools can read, write, validate, transform, and regenerate it.
+Because the model is text, it can be reviewed, diffed, versioned, and stored
+alongside code and documentation.
 
-Diagrams make that structure clear to people. Structured text is easier for AI
-systems to read, write, and modify reliably. Traditional diagram files usually
-favor the first need, while plain text favors the second.
-
-ORBIT connects both:
-
-- Humans view a generated diagram.
-- AI reads and writes the underlying ORBIT model.
-- Teams review, edit, diff, and version that model like source code.
-- One document provides a visual diagram for people and structured context for AI.
-
-ORBIT is more than a markup format. It is intended as an ecosystem of
+ORBIT is not only a markup language. It is intended as an ecosystem of
 domain-specific modeling grammars, validation tools, automatic layout, and
 renderers built on a shared language core.
 
+## Why ORBIT?
+
+Diagrams and structured text solve opposite sides of the same problem.
+
+Humans understand complex structures and relationships well through diagrams.
+AI systems work more reliably with structured text. As an idea grows, explaining
+it in prose consumes context and hides connections. A diagram makes those
+connections visible, but traditional diagram files are difficult for AI to
+reliably read, edit, diff, validate, or regenerate.
+
+ORBIT bridges that gap. It is useful when an idea has become too complex for
+plain text, a diagram would explain it better, drawing it manually would take
+too long, and an AI agent also needs to understand or modify the model.
+
 ## What can it be used for?
 
-- Brainstorm complex ideas with AI.
+- Explore and refine complex ideas with AI.
 - Design software architecture and databases.
 - Plan products, projects, and processes.
-- Keep diagrams alongside project documentation.
+- Carry a model from ideation into implementation.
+- Keep diagrams as maintainable project documentation.
 - Give AI agents precise, structured context.
-- Generate diagrams instead of redrawing them manually.
+- Generate diagrams without drawing them manually.
 
 ## Example
 
@@ -57,11 +63,15 @@ table users {
 };
 ```
 
-The model can be validated, inspected as structured data, and rendered as SVG.
+The same model can be validated, inspected as structured data, and rendered as SVG.
 
 ## Project status
 
-Current version: [`v0.1.0-alpha.1`](https://github.com/lunarmolly/orbit-language/tree/v0.1.0-alpha.1)
+| Concept        | Current                                                                              |
+| -------------- | ------------------------------------------------------------------------------------ |
+| Wave           | 1                                                                                    |
+| Specification  | 0.1                                                                                  |
+| Implementation | [`v0.1.0-alpha.1`](https://github.com/lunarmolly/orbit-language/tree/v0.1.0-alpha.1) |
 
 **Wave 1:** Database Schema
 
@@ -84,7 +94,20 @@ Planned:
 - Playground
 - Multiple export targets
 
-Pre-1.0 releases may change language syntax and public APIs.
+## Versioning
+
+ORBIT separates three related concepts:
+
+- **Wave** describes roadmap scope and supported diagram capabilities. It is not
+  a compatibility guarantee.
+- **Specification Version** describes language syntax, semantics, grammar, and
+  validation rules.
+- **Implementation Version** describes releases of the parser, validator,
+  renderer, CLI, playground, and related tooling.
+
+Pre-1.0 specifications and implementation APIs may change. See
+[Versioning](https://github.com/lunarmolly/orbit-language/wiki/4.-Versioning)
+for the compatibility direction and release rules.
 
 ## Learn more
 
@@ -113,37 +136,42 @@ Development follows `dev -> pull request -> main`.
 
 ## Что такое ORBIT?
 
-ORBIT — система моделирования диаграмм, удобная для людей и ИИ.
+ORBIT — система моделирования, удобная для людей и ИИ. Она превращает
+структурированный текст в диаграммы и предоставляет системам ИИ доступ к той же
+исходной модели.
 
-Люди всё чаще вместе с ИИ прорабатывают продукты, базы данных, архитектуру
-программных систем и рабочие процессы. На раннем этапе достаточно обычного
-текста, но по мере роста идеи её структуру и связи становится трудно обсуждать
-без визуального представления.
+Документ ORBIT является источником истины. Люди могут видеть его как диаграмму,
+а ИИ-агенты и инструменты — читать, создавать, проверять, преобразовывать и
+повторно визуализировать. Поскольку модель хранится в виде текста, её можно
+рецензировать, сравнивать, версионировать и хранить рядом с кодом и документацией.
 
-Люди хорошо воспринимают диаграммы. Системам ИИ проще надёжно читать, создавать
-и изменять структурированный текст. Традиционные форматы диаграмм обычно
-ориентированы на первую задачу, а обычный текст — на вторую.
-
-ORBIT соединяет оба подхода:
-
-- Люди работают с созданной диаграммой.
-- ИИ читает и записывает исходную модель ORBIT.
-- Команда редактирует, сравнивает, рецензирует и версионирует модель как код.
-- Один документ становится визуальной диаграммой для людей и структурированным
-  контекстом для ИИ.
-
-ORBIT — не только формат разметки. Проект развивается как экосистема
+ORBIT — не только язык разметки. Проект развивается как экосистема
 предметно-ориентированных грамматик, средств проверки, автоматической
 компоновки и рендереров на общем языковом ядре.
 
+## Зачем нужен ORBIT?
+
+Диаграммы и структурированный текст решают разные стороны одной задачи.
+
+Люди хорошо понимают сложные структуры и связи через диаграммы. Системы ИИ
+надёжнее работают со структурированным текстом. Когда идея растёт, её описание
+обычным текстом расходует контекст и скрывает связи. Диаграмма делает их
+видимыми, но традиционные файлы диаграмм трудно надёжно читать, изменять,
+сравнивать, проверять и пересоздавать средствами ИИ.
+
+ORBIT устраняет этот разрыв. Он полезен, когда идея стала слишком сложной для
+обычного текста, диаграмма объяснила бы её лучше, ручное рисование заняло бы
+слишком много времени, а ИИ-агенту также нужно понимать или изменять модель.
+
 ## Для чего можно использовать ORBIT?
 
-- Прорабатывать сложные идеи вместе с ИИ.
+- Прорабатывать и уточнять сложные идеи вместе с ИИ.
 - Проектировать архитектуру программ и базы данных.
 - Планировать продукты, проекты и процессы.
-- Хранить диаграммы рядом с документацией проекта.
+- Переносить модель от идеи к реализации.
+- Поддерживать диаграммы как актуальную документацию проекта.
 - Передавать ИИ-агентам точный структурированный контекст.
-- Создавать диаграммы автоматически вместо ручной перерисовки.
+- Создавать диаграммы без ручной отрисовки.
 
 ## Пример
 
@@ -163,11 +191,15 @@ table users {
 };
 ```
 
-Модель можно проверить, изучить как структурированные данные и отрендерить в SVG.
+Одну модель можно проверить, изучить как структурированные данные и отрендерить в SVG.
 
 ## Состояние проекта
 
-Текущая версия: [`v0.1.0-alpha.1`](https://github.com/lunarmolly/orbit-language/tree/v0.1.0-alpha.1)
+| Понятие      | Текущее значение                                                                     |
+| ------------ | ------------------------------------------------------------------------------------ |
+| Волна        | 1                                                                                    |
+| Спецификация | 0.1                                                                                  |
+| Реализация   | [`v0.1.0-alpha.1`](https://github.com/lunarmolly/orbit-language/tree/v0.1.0-alpha.1) |
 
 **Волна 1:** Database Schema
 
@@ -190,7 +222,20 @@ table users {
 - Playground
 - Несколько форматов экспорта
 
-До версии 1.0 синтаксис языка и публичные API могут изменяться.
+## Версионирование
+
+ORBIT разделяет три связанных понятия:
+
+- **Волна** описывает этап дорожной карты и поддерживаемые возможности диаграмм.
+  Она не является гарантией совместимости.
+- **Версия спецификации** описывает синтаксис, семантику, грамматику и правила
+  валидации языка.
+- **Версия реализации** описывает выпуски парсера, валидатора, рендерера, CLI,
+  playground и связанных инструментов.
+
+Спецификации и API реализации до версии 1.0 могут изменяться. Направление
+совместимости и правила выпусков описаны на странице
+[Версионирование](https://github.com/lunarmolly/orbit-language/wiki/4.-Versioning).
 
 ## Подробнее
 
