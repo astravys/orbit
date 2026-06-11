@@ -1,0 +1,3 @@
+diagram database;
+
+ref orders.user_id -> users.id;

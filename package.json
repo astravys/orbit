@@ -1,0 +1,33 @@
+{
+  "name": "orbit-language",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.12.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "corepack pnpm -r build",
+    "check": "corepack pnpm lint && corepack pnpm typecheck && corepack pnpm test",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "corepack pnpm build && vitest run",
+    "typecheck": "tsc -b --pretty false",
+    "orbit": "node apps/cli/dist/index.js"
+  },
+  "devDependencies": {
+    "@orbit/core": "workspace:*",
+    "@orbit/parser": "workspace:*",
+    "@orbit/renderer-svg": "workspace:*",
+    "@orbit/validator": "workspace:*",
+    "@eslint/js": "^9.29.0",
+    "@types/node": "^24.0.3",
+    "eslint": "^9.29.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.34.1",
+    "vitest": "^3.2.3"
+  }
+}

@@ -1,0 +1,47 @@
+"""
+Customer management database.
+"""
+diagram database;
+
+enum order_status {
+    pending;
+    paid;
+    shipped;
+};
+
+"""
+Application users.
+"""
+table users {
+    column id int {
+        pk;
+        auto_increment;
+    };
+
+    column email string {
+        unique;
+        not_null;
+    };
+};
+
+table orders {
+    column id int {
+        pk;
+        auto_increment;
+    };
+
+    column user_id int {
+        not_null;
+    };
+
+    column status order_status;
+};
+
+relationship user_orders {
+    orders.user_id -> users.id;
+};
+
+records users {
+    { id: 1, email: "alice@example.com" };
+    { id: 2, email: "bob@example.com" };
+};

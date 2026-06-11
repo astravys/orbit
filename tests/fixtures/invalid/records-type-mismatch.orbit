@@ -1,0 +1,11 @@
+diagram database;
+
+table users {
+    column id int {
+        not_null;
+    };
+};
+
+records users {
+    { id: "one" };
+};
