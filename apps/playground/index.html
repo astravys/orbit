@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ORBIT Playground</title>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <p class="eyebrow">ORBIT Wave 1</p>
+          <h1>Database Playground</h1>
+        </div>
+        <span id="status" class="status">Ready</span>
+      </header>
+      <section class="workspace">
+        <label class="panel editor-panel">
+          <span>ORBIT source</span>
+          <textarea id="source" spellcheck="false"></textarea>
+        </label>
+        <section class="panel preview-panel" aria-label="SVG preview">
+          <span>SVG preview</span>
+          <div id="preview"></div>
+        </section>
+      </section>
+      <section class="panel diagnostics-panel">
+        <span>Diagnostics</span>
+        <pre id="diagnostics">No diagnostics.</pre>
+      </section>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

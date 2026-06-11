@@ -1,0 +1,9 @@
+diagram database;
+
+"""
+Users.
+"""
+
+table users {
+    column id int;
+};
