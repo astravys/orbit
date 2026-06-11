@@ -26,7 +26,9 @@ grammars. They are an internal reuse boundary.
 - **Matrix**: fixed or derived row/column grids and cells.
 - **Canvas**: named regions containing structured text or cards.
 - **Board/List**: ordered lanes, columns, groups, cards, and checklist items.
-- **Data Mapping**: graph layout plus field-level ports and mapping edges.
+
+Families may define specialized subtypes. Likely Graph subtypes include Generic
+Graph, Topology Graph, Hierarchy Graph, and Mapping Graph.
 
 ## Proposed Classification
 
@@ -70,8 +72,8 @@ grammars. They are an internal reuse boundary.
 | RACI Matrix | Business | Matrix | activities, roles, assignments | row/column grid | none | headers, cells, badges |
 | Risk Matrix | Business | Matrix | likelihood, impact, risks | scored matrix grid | none | axes, cells, markers, legend |
 | Decision Matrix | Business | Matrix | options, criteria, scores | row/column grid | none | headers, cells, score badges |
-| Data Lineage | Data | Data Mapping | datasets, fields, transformations | layered data graph | field/port lineage routing | dataset boxes, rows, ports, edges |
-| ETL Mapping | Data | Data Mapping | sources, targets, fields, transforms | paired/layered mappings | dense field mapping | tables, rows, ports, transform nodes |
+| Data Lineage | Data | Graph | datasets, fields, transforms, lineage | layered mapping graph | field-level port routing | dataset boxes, rows, ports, directed edges |
+| ETL Mapping | Data | Graph | sources, targets, transformations, field mappings | paired/layered mapping graph | dense field-level routing | tables, rows, ports, transform nodes, mapping edges |
 
 ## Architecture Consequences
 
@@ -80,12 +82,15 @@ grammars. They are an internal reuse boundary.
 - Routing should operate on positioned ports and obstacles, not domain AST nodes.
 - SVG should consume positioned primitives rather than validated domain models.
 - A diagram type may specialize a family without forking the whole renderer.
+- Specialized Graph layouts may support topology, hierarchy, and mapping-style
+  diagrams without creating separate top-level families.
 - Cross-family hybrids should compose primitives and strategies rather than create
   a universal grammar.
 
 ## Open Questions
 
-- Whether Graph and Data Mapping share one base layout API or separate engines.
+- How Graph family subtypes should share layout and routing primitives while
+  supporting specialized styles such as topology, hierarchy, and mapping graphs.
 - Whether Timeline and Board/List need a shared track/lane abstraction.
 - How family render models expose accessibility and documentation metadata.
 - How future layout preferences select strategies without becoming model semantics.
