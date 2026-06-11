@@ -24,3 +24,6 @@ Applications orchestrate this pipeline but do not own language semantics.
 The Database MVP supports only tables, columns, enums, directed relationships, and
 records. Every statement is semicolon-terminated. Comments are discarded, while
 immediately adjacent documentation blocks are retained.
+
+Future diagram types should reuse layout, routing, and renderer infrastructure
+through the proposed [diagram implementation families](implementation-families.md).

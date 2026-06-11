@@ -64,8 +64,24 @@ specification and public API.
 ```sh
 corepack enable
 pnpm install
-pnpm check
+pnpm build
+pnpm test
+pnpm lint
+```
+
+Additional commands:
+
+```sh
 pnpm orbit validate docs/examples/customer-database.orbit
 pnpm orbit render docs/examples/customer-database.orbit --output schema.svg
 pnpm --filter @orbit/playground dev
+```
+
+## Contributing
+
+Development happens on `dev`. Changes are reviewed through a pull request before
+being merged into the protected `main` branch:
+
+```text
+dev -> pull request -> main
 ```

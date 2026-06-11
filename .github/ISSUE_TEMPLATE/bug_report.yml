@@ -1,0 +1,27 @@
+name: Bug report
+description: Report incorrect ORBIT behavior or tooling failures
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the observed behavior and what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Include the smallest ORBIT input or command that reproduces the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include the ORBIT version, Node.js version, and operating system.
+    validations:
+      required: true
