@@ -8,70 +8,71 @@
 export type GraphMetadata = Readonly<Record<string, unknown>>;
 
 export interface GraphBadge {
-  label: string;
-  kind?: string;
-  metadata?: GraphMetadata;
+  readonly label: string;
+  readonly kind?: string;
+  readonly metadata?: GraphMetadata;
 }
 
 export interface GraphRow {
-  id: string;
-  label: string;
-  badges?: readonly GraphBadge[];
-  portId?: string;
-  metadata?: GraphMetadata;
+  readonly id: string;
+  readonly label: string;
+  readonly badges?: readonly GraphBadge[];
+  readonly portId?: string;
+  readonly metadata?: GraphMetadata;
 }
 
 export interface GraphCompartment {
-  id: string;
-  title?: string;
-  rows: readonly GraphRow[];
+  readonly id: string;
+  readonly title?: string;
+  readonly rows: readonly GraphRow[];
+  readonly documentation?: string;
+  readonly metadata?: GraphMetadata;
 }
 
 export type GraphPortSide = "top" | "right" | "bottom" | "left";
 
 export interface GraphPort {
-  id: string;
-  nodeId?: string;
-  rowId?: string;
-  preferredSide?: GraphPortSide;
-  metadata?: GraphMetadata;
+  readonly id: string;
+  readonly rowId?: string;
+  readonly preferredSide?: GraphPortSide;
+  readonly metadata?: GraphMetadata;
 }
 
 export interface GraphNode {
-  id: string;
-  kind?: string;
-  title: string;
-  compartments?: readonly GraphCompartment[];
-  ports?: readonly GraphPort[];
-  badges?: readonly GraphBadge[];
-  documentation?: string;
-  metadata?: GraphMetadata;
+  readonly id: string;
+  readonly kind?: string;
+  readonly title: string;
+  readonly compartments?: readonly GraphCompartment[];
+  readonly ports?: readonly GraphPort[];
+  readonly badges?: readonly GraphBadge[];
+  readonly documentation?: string;
+  readonly metadata?: GraphMetadata;
 }
 
 export interface GraphEdgeEndpoint {
-  nodeId: string;
-  portId?: string;
-  rowId?: string;
+  readonly nodeId: string;
+  readonly portId?: string;
+  readonly rowId?: string;
 }
 
 export type GraphEdgeDirection = "directed" | "undirected" | "bidirectional";
 
 export interface GraphEdge {
-  id: string;
-  source: GraphEdgeEndpoint;
-  target: GraphEdgeEndpoint;
-  label?: string;
-  direction?: GraphEdgeDirection;
-  kind?: string;
-  documentation?: string;
-  metadata?: GraphMetadata;
+  readonly id: string;
+  readonly source: GraphEdgeEndpoint;
+  readonly target: GraphEdgeEndpoint;
+  readonly label?: string;
+  readonly direction?: GraphEdgeDirection;
+  readonly kind?: string;
+  readonly documentation?: string;
+  readonly metadata?: GraphMetadata;
 }
 
 export interface GraphModel {
-  kind: "GraphModel";
-  nodes: readonly GraphNode[];
-  edges: readonly GraphEdge[];
-  title?: string;
-  documentation?: string;
-  metadata?: GraphMetadata;
+  readonly kind: "GraphModel";
+  readonly nodes: readonly GraphNode[];
+  readonly edges: readonly GraphEdge[];
+  readonly title?: string;
+  readonly documentation?: string;
+  readonly metadata?: GraphMetadata;
 }

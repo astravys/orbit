@@ -14,6 +14,8 @@ const graphFixture = {
         {
           id: "fields",
           title: "Fields",
+          documentation: "Persistent attributes.",
+          metadata: { role: "attributes" },
           rows: [
             {
               id: "user-id",
