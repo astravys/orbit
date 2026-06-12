@@ -18,6 +18,7 @@
     "typecheck": "tsc -b --pretty false"
   },
   "dependencies": {
-    "@orbit/core": "workspace:*"
+    "@orbit/core": "workspace:*",
+    "@orbit/family-graph": "workspace:*"
   }
 }
