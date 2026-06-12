@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@orbit/core": "workspace:*",
+    "@orbit/family-graph": "workspace:*",
     "@orbit/parser": "workspace:*",
     "@orbit/renderer-svg": "workspace:*",
     "@orbit/validator": "workspace:*",
