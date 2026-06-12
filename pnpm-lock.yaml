@@ -14,6 +14,9 @@ importers:
       '@orbit/core':
         specifier: workspace:*
         version: link:packages/core
+      '@orbit/family-graph':
+        specifier: workspace:*
+        version: link:packages/family-graph
       '@orbit/parser':
         specifier: workspace:*
         version: link:packages/parser
@@ -74,6 +77,8 @@ importers:
         version: 7.3.5(@types/node@24.13.2)
 
   packages/core: {}
+
+  packages/family-graph: {}
 
   packages/parser:
     dependencies:
