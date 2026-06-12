@@ -67,11 +67,11 @@ The same model can be validated, inspected as structured data, and rendered as S
 
 ## Project status
 
-| Concept        | Current                                                                              |
-| -------------- | ------------------------------------------------------------------------------------ |
-| Wave           | 1                                                                                    |
-| Specification  | 0.1                                                                                  |
-| Implementation | [`v0.1.0-alpha.1`](https://github.com/lunarmolly/orbit-language/tree/v0.1.0-alpha.1) |
+| Concept        | Current                                                                   |
+| -------------- | ------------------------------------------------------------------------- |
+| Wave           | 1                                                                         |
+| Specification  | 0.1                                                                       |
+| Implementation | [`v0.1.0-alpha.1`](https://github.com/astravys/orbit/tree/v0.1.0-alpha.1) |
 
 **Wave 1:** Database Schema
 
@@ -106,12 +106,12 @@ ORBIT separates three related concepts:
   renderer, CLI, playground, and related tooling.
 
 Pre-1.0 specifications and implementation APIs may change. See
-[Versioning](https://github.com/lunarmolly/orbit-language/wiki/4.-Versioning)
+[Versioning](https://github.com/astravys/orbit/wiki/4.-Versioning)
 for the compatibility direction and release rules.
 
 ## Learn more
 
-See the [ORBIT Wiki](https://github.com/lunarmolly/orbit-language/wiki) for the
+See the [ORBIT Wiki](https://github.com/astravys/orbit/wiki) for the
 language specification, modeling guidelines, architecture, and supported
 diagram types.
 
@@ -195,11 +195,11 @@ table users {
 
 ## Состояние проекта
 
-| Понятие      | Текущее значение                                                                     |
-| ------------ | ------------------------------------------------------------------------------------ |
-| Волна        | 1                                                                                    |
-| Спецификация | 0.1                                                                                  |
-| Реализация   | [`v0.1.0-alpha.1`](https://github.com/lunarmolly/orbit-language/tree/v0.1.0-alpha.1) |
+| Понятие      | Текущее значение                                                          |
+| ------------ | ------------------------------------------------------------------------- |
+| Волна        | 1                                                                         |
+| Спецификация | 0.1                                                                       |
+| Реализация   | [`v0.1.0-alpha.1`](https://github.com/astravys/orbit/tree/v0.1.0-alpha.1) |
 
 **Волна 1:** Database Schema
 
@@ -235,12 +235,12 @@ ORBIT разделяет три связанных понятия:
 
 Спецификации и API реализации до версии 1.0 могут изменяться. Направление
 совместимости и правила выпусков описаны на странице
-[Версионирование](https://github.com/lunarmolly/orbit-language/wiki/4.-Versioning).
+[Версионирование](https://github.com/astravys/orbit/wiki/4.-Versioning).
 
 ## Подробнее
 
 Спецификация языка, рекомендации по моделированию, архитектура и список типов
-диаграмм находятся в [Wiki ORBIT](https://github.com/lunarmolly/orbit-language/wiki).
+диаграмм находятся в [Wiki ORBIT](https://github.com/astravys/orbit/wiki).
 
 ## Разработка
 
