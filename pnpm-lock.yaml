@@ -20,6 +20,9 @@ importers:
       '@orbit/parser':
         specifier: workspace:*
         version: link:packages/parser
+      '@orbit/render-primitives':
+        specifier: workspace:*
+        version: link:packages/render-primitives
       '@orbit/renderer-svg':
         specifier: workspace:*
         version: link:packages/renderer-svg
@@ -86,6 +89,12 @@ importers:
         specifier: workspace:*
         version: link:../core
 
+  packages/render-primitives:
+    dependencies:
+      '@orbit/family-graph':
+        specifier: workspace:*
+        version: link:../family-graph
+
   packages/renderer-svg:
     dependencies:
       '@orbit/core':
@@ -94,6 +103,9 @@ importers:
       '@orbit/family-graph':
         specifier: workspace:*
         version: link:../family-graph
+      '@orbit/render-primitives':
+        specifier: workspace:*
+        version: link:../render-primitives
       '@orbit/validator':
         specifier: workspace:*
         version: link:../validator

@@ -6,10 +6,5 @@
     "tsBuildInfoFile": "dist/.tsbuildinfo"
   },
   "include": ["src/**/*.ts"],
-  "references": [
-    { "path": "../core" },
-    { "path": "../family-graph" },
-    { "path": "../render-primitives" },
-    { "path": "../validator" }
-  ]
+  "references": [{ "path": "../family-graph" }]
 }

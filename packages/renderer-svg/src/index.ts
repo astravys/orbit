@@ -1,1 +1,1 @@
-export { renderDatabaseSvg } from "./renderer.js";
+export { renderDatabaseSvg, renderDocumentToSvg } from "./renderer.js";

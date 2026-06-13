@@ -1,5 +1,5 @@
 {
-  "name": "@orbit/renderer-svg",
+  "name": "@orbit/render-primitives",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -18,9 +18,6 @@
     "typecheck": "tsc -b --pretty false"
   },
   "dependencies": {
-    "@orbit/core": "workspace:*",
-    "@orbit/family-graph": "workspace:*",
-    "@orbit/render-primitives": "workspace:*",
-    "@orbit/validator": "workspace:*"
+    "@orbit/family-graph": "workspace:*"
   }
 }
