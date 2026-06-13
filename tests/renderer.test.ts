@@ -8,7 +8,11 @@ describe("SVG renderer", () => {
     const source = `
 """Schema & data."""
 diagram database;
-table users { column id int { pk; }; };
+enum status { active; };
+table users {
+  column id int { pk; };
+  column status status;
+};
 table orders { column user_id int; };
 relationship link { orders.user_id -> users.id; };
 records users { { id: 1 }; };
@@ -18,8 +22,11 @@ records users { { id: 1 }; };
     const first = renderDatabaseSvg(validated.model!);
     const second = renderDatabaseSvg(validated.model!);
     expect(first).toBe(second);
+    expect(first).toMatch(/^<\?xml version="1\.0" encoding="UTF-8"\?>\n<svg/);
     expect(first).toContain("Schema &amp; data.");
     expect(first).toContain('class="document-title"');
+    expect(first).toContain('id="table-users"');
+    expect(first).toContain('id="enum-0-status"');
     expect(first).toContain('marker-end="url(#arrow)"');
     expect(first).toContain(">PK</text>");
     expect(first).toContain(">FK</text>");

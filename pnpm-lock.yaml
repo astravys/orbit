@@ -91,6 +91,12 @@ importers:
       '@orbit/core':
         specifier: workspace:*
         version: link:../core
+      '@orbit/family-graph':
+        specifier: workspace:*
+        version: link:../family-graph
+      '@orbit/validator':
+        specifier: workspace:*
+        version: link:../validator
 
   packages/validator:
     dependencies:
