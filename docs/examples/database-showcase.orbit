@@ -1,0 +1,124 @@
+"""
+Planning & delivery schema <Wave 1>.
+Compact coverage of supported Database Schema elements.
+"""
+diagram database;
+
+"""
+Task lifecycle states.
+"""
+enum task_status {
+    planned;
+    active;
+    completed;
+};
+
+"""
+People who own projects and work on tasks.
+"""
+table users {
+    column id int {
+        pk;
+        auto_increment;
+    };
+
+    column email string {
+        unique;
+        not_null;
+    };
+
+    column display_name string;
+    column external_id custom_identifier;
+};
+
+table projects {
+    column id int {
+        pk;
+        auto_increment;
+    };
+
+    column owner_id int {
+        not_null;
+    };
+
+    column slug string {
+        unique;
+        not_null;
+    };
+};
+
+"""
+Work items within a project.
+"""
+table tasks {
+    column id int {
+        pk;
+        auto_increment;
+    };
+
+    column project_id int {
+        not_null;
+    };
+
+    column assignee_id int;
+
+    column status task_status {
+        not_null;
+    };
+
+    column estimate_hours decimal;
+};
+
+table comments {
+    column id int {
+        pk;
+        auto_increment;
+    };
+
+    column task_id int {
+        not_null;
+    };
+
+    column author_id int {
+        not_null;
+    };
+
+    column body text {
+        not_null;
+    };
+
+    column approved boolean;
+};
+
+"""
+Every project has an owner.
+"""
+relationship project_owner {
+    projects.owner_id -> users.id;
+};
+
+relationship task_project {
+    tasks.project_id -> projects.id;
+};
+
+relationship task_assignee {
+    tasks.assignee_id -> users.id;
+};
+
+relationship comment_task {
+    comments.task_id -> tasks.id;
+};
+
+relationship comment_author {
+    comments.author_id -> users.id;
+};
+
+records tasks {
+    {
+        id: 1,
+        project_id: 10,
+        assignee_id: 2,
+        status: active,
+        estimate_hours: 3.5
+    };
+};

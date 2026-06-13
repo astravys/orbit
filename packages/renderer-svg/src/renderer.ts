@@ -1,10 +1,11 @@
 import type { ValidatedDatabaseModel } from "@orbit/core";
 import {
   layoutGraph,
+  routeGraphEdges,
   type GraphLayoutNode,
   type GraphLayoutRow,
-  type GraphModel,
   type GraphNode,
+  type GraphRoutedEdge,
   type GraphRow,
 } from "@orbit/family-graph";
 import { databaseToGraphModel } from "@orbit/validator";
@@ -22,13 +23,20 @@ export function renderDatabaseSvg(model: ValidatedDatabaseModel): string {
       .filter((node) => node.kind === "database.enum")
       .map((node, index) => [node.id, index] as const),
   );
-  const layoutNodes = new Map(layout.nodes.map((node) => [node.id, node]));
-  const rows = new Map(
-    layout.nodes.flatMap((node) =>
-      node.rows.map((row) => [`${node.id}:${row.rowId}`, row] as const),
-    ),
-  );
-  const relationships = renderRelationships(graph, layoutNodes, rows);
+  const routing = routeGraphEdges(graph, layout, {
+    endpointPolicy: "nearest-node-boundary",
+    targetClearance: 8,
+  });
+  const graphEdges = new Map(graph.edges.map((edge) => [edge.id, edge]));
+  const relationships = routing.edges
+    .map((edge, index) =>
+      renderRelationship(
+        edge,
+        graphEdges.get(edge.id)?.label ?? edge.id,
+        index,
+      ),
+    )
+    .join("\n");
   const title = model.documentation ?? "ORBIT database schema";
 
   return [
@@ -59,43 +67,29 @@ export function renderDatabaseSvg(model: ValidatedDatabaseModel): string {
   ].join("\n");
 }
 
-function renderRelationships(
-  graph: GraphModel,
-  nodes: ReadonlyMap<string, GraphLayoutNode>,
-  rows: ReadonlyMap<string, GraphLayoutRow>,
+function renderRelationship(
+  edge: GraphRoutedEdge,
+  label: string,
+  index: number,
 ): string {
-  return graph.edges
-    .map((edge, index) => {
-      const source = nodes.get(edge.source.nodeId);
-      const target = nodes.get(edge.target.nodeId);
-      const sourceRow =
-        edge.source.rowId === undefined
-          ? undefined
-          : rows.get(`${edge.source.nodeId}:${edge.source.rowId}`);
-      const targetRow =
-        edge.target.rowId === undefined
-          ? undefined
-          : rows.get(`${edge.target.nodeId}:${edge.target.rowId}`);
-      if (
-        source === undefined ||
-        target === undefined ||
-        sourceRow === undefined ||
-        targetRow === undefined
-      ) {
-        return "";
-      }
-      const sourceIsLeft = source.x < target.x;
-      const startX = sourceIsLeft ? source.x + source.width : source.x;
-      const startY = sourceRow.y + sourceRow.height / 2;
-      const endX = sourceIsLeft ? target.x - 8 : target.x + target.width + 8;
-      const endY = targetRow.y + targetRow.height / 2;
-      const middleX = (startX + endX) / 2;
-      return [
-        `<path id="relationship-${index}-${slug(edge.label ?? edge.id)}" class="relationship" d="M ${startX} ${startY} H ${middleX} V ${endY} H ${endX}" marker-end="url(#arrow)" />`,
-        `<title>${escapeXml(edge.label ?? edge.id)}</title>`,
-      ].join("");
-    })
-    .join("\n");
+  return [
+    `<path id="relationship-${index}-${slug(label)}" class="relationship" d="${routePath(edge)}" marker-end="url(#arrow)" />`,
+    `<title>${escapeXml(label)}</title>`,
+  ].join("");
+}
+
+function routePath(edge: GraphRoutedEdge): string {
+  const [first, ...rest] = edge.points;
+  if (first === undefined) {
+    return "";
+  }
+  return rest.reduce((path, point, index) => {
+    const previous = edge.points[index]!;
+    if (point.y === previous.y) {
+      return `${path} H ${point.x}`;
+    }
+    return `${path} V ${point.y}`;
+  }, `M ${first.x} ${first.y}`);
 }
 
 function renderNode(
