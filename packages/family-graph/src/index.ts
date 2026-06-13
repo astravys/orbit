@@ -78,3 +78,4 @@ export interface GraphModel {
 }
 
 export * from "./layout.js";
+export * from "./routing.js";

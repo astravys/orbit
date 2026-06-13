@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="774" viewBox="0 0 780 774" role="img" aria-labelledby="orbit-title orbit-description">
+<title id="orbit-title">Planning &amp; delivery schema &lt;Wave 1&gt;.</title>
+<desc id="orbit-description">Planning &amp; delivery schema &lt;Wave 1&gt;.
+Compact coverage of supported Database Schema elements.</desc>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/></marker>
+</defs>
+<style>
+.box{fill:#fff;stroke:#334155;stroke-width:1.5}.header{fill:#e2e8f0}.enum-header{fill:#ede9fe}.divider{stroke:#cbd5e1}.document-title{font:600 18px system-ui,sans-serif;fill:#0f172a}.title{font:600 15px system-ui,sans-serif;fill:#0f172a}.row{font:13px ui-monospace,monospace;fill:#1e293b}.row-pk{font-weight:700;fill:#7c2d12}.row-fk{font-weight:700;fill:#1d4ed8}.key-badge{font:700 10px system-ui,sans-serif}.documentation{font:12px system-ui,sans-serif;fill:#64748b}.relationship{fill:none;stroke:#334155;stroke-width:1.75}
+</style>
+<text class="document-title" x="40" y="30">Planning &amp; delivery schema &lt;Wave 1&gt;.</text>
+<path id="relationship-0-project_owner" class="relationship" d="M 440 174 H 394 V 172 H 348" marker-end="url(#arrow)" /><title>project_owner</title>
+<path id="relationship-1-task_project" class="relationship" d="M 340 432 H 386 V 146 H 432" marker-end="url(#arrow)" /><title>task_project</title>
+<path id="relationship-2-task_assignee" class="relationship" d="M 40 460 H 194 V 172 H 348" marker-end="url(#arrow)" /><title>task_assignee</title>
+<path id="relationship-3-comment_task" class="relationship" d="M 440 406 H 394 V 404 H 348" marker-end="url(#arrow)" /><title>comment_task</title>
+<path id="relationship-4-comment_author" class="relationship" d="M 440 434 H 394 V 172 H 348" marker-end="url(#arrow)" /><title>comment_author</title>
+<g id="table-users">
+<rect class="box" x="40" y="94" width="300" height="176" rx="6" />
+<path class="header" d="M 46 94 H 334 Q 340 94 340 100 V 158 H 40 V 100 Q 40 94 46 94 Z" />
+<text class="title" x="52" y="118">users</text>
+<text class="documentation" x="52" y="139">People who own projects and work on tasks.</text>
+<line class="divider" x1="40" y1="158" x2="340" y2="158" /><text class="key-badge row row-pk" x="52" y="176">PK</text><text class="row row-pk" x="78" y="177">id: int [pk, auto_increment]</text>
+<line class="divider" x1="40" y1="186" x2="340" y2="186" /><text class="row" x="52" y="205">email: string [unique, not_null]</text>
+<line class="divider" x1="40" y1="214" x2="340" y2="214" /><text class="row" x="52" y="233">display_name: string</text>
+<line class="divider" x1="40" y1="242" x2="340" y2="242" /><text class="row" x="52" y="261">external_id: custom_identifier</text>
+</g>
+<g id="table-projects">
+<rect class="box" x="440" y="94" width="300" height="122" rx="6" />
+<path class="header" d="M 446 94 H 734 Q 740 94 740 100 V 132 H 440 V 100 Q 440 94 446 94 Z" />
+<text class="title" x="452" y="118">projects</text>
+
+<line class="divider" x1="440" y1="132" x2="740" y2="132" /><text class="key-badge row row-pk" x="452" y="150">PK</text><text class="row row-pk" x="478" y="151">id: int [pk, auto_increment]</text>
+<line class="divider" x1="440" y1="160" x2="740" y2="160" /><text class="key-badge row row-fk" x="452" y="178">FK</text><text class="row row-fk" x="478" y="179">owner_id: int [not_null]</text>
+<line class="divider" x1="440" y1="188" x2="740" y2="188" /><text class="row" x="452" y="207">slug: string [unique, not_null]</text>
+</g>
+<g id="table-tasks">
+<rect class="box" x="40" y="326" width="300" height="204" rx="6" />
+<path class="header" d="M 46 326 H 334 Q 340 326 340 332 V 390 H 40 V 332 Q 40 326 46 326 Z" />
+<text class="title" x="52" y="350">tasks</text>
+<text class="documentation" x="52" y="371">Work items within a project.</text>
+<line class="divider" x1="40" y1="390" x2="340" y2="390" /><text class="key-badge row row-pk" x="52" y="408">PK</text><text class="row row-pk" x="78" y="409">id: int [pk, auto_increment]</text>
+<line class="divider" x1="40" y1="418" x2="340" y2="418" /><text class="key-badge row row-fk" x="52" y="436">FK</text><text class="row row-fk" x="78" y="437">project_id: int [not_null]</text>
+<line class="divider" x1="40" y1="446" x2="340" y2="446" /><text class="key-badge row row-fk" x="52" y="464">FK</text><text class="row row-fk" x="78" y="465">assignee_id: int</text>
+<line class="divider" x1="40" y1="474" x2="340" y2="474" /><text class="row" x="52" y="493">status: task_status [not_null]</text>
+<line class="divider" x1="40" y1="502" x2="340" y2="502" /><text class="row" x="52" y="521">estimate_hours: decimal</text>
+</g>
+<g id="table-comments">
+<rect class="box" x="440" y="326" width="300" height="178" rx="6" />
+<path class="header" d="M 446 326 H 734 Q 740 326 740 332 V 364 H 440 V 332 Q 440 326 446 326 Z" />
+<text class="title" x="452" y="350">comments</text>
+
+<line class="divider" x1="440" y1="364" x2="740" y2="364" /><text class="key-badge row row-pk" x="452" y="382">PK</text><text class="row row-pk" x="478" y="383">id: int [pk, auto_increment]</text>
+<line class="divider" x1="440" y1="392" x2="740" y2="392" /><text class="key-badge row row-fk" x="452" y="410">FK</text><text class="row row-fk" x="478" y="411">task_id: int [not_null]</text>
+<line class="divider" x1="440" y1="420" x2="740" y2="420" /><text class="key-badge row row-fk" x="452" y="438">FK</text><text class="row row-fk" x="478" y="439">author_id: int [not_null]</text>
+<line class="divider" x1="440" y1="448" x2="740" y2="448" /><text class="row" x="452" y="467">body: text [not_null]</text>
+<line class="divider" x1="440" y1="476" x2="740" y2="476" /><text class="row" x="452" y="495">approved: boolean</text>
+</g>
+<g id="enum-0-task_status">
+<rect class="box" x="440" y="586" width="300" height="148" rx="6" />
+<path class="enum-header" d="M 446 586 H 734 Q 740 586 740 592 V 650 H 440 V 592 Q 440 586 446 586 Z" />
+<text class="title" x="452" y="610">task_status</text>
+<text class="documentation" x="452" y="631">Task lifecycle states.</text>
+<line class="divider" x1="440" y1="650" x2="740" y2="650" /><text class="row" x="452" y="669">planned</text>
+<line class="divider" x1="440" y1="678" x2="740" y2="678" /><text class="row" x="452" y="697">active</text>
+<line class="divider" x1="440" y1="706" x2="740" y2="706" /><text class="row" x="452" y="725">completed</text>
+</g>
+</svg>
