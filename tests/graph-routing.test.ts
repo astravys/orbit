@@ -231,4 +231,13 @@ describe("Graph routing", () => {
     } satisfies GraphModel;
     expect(routeGraphEdges(model, layoutGraph(model))).toEqual({ edges: [] });
   });
+
+  it("rejects an unknown endpoint policy at runtime", () => {
+    const layout = layoutGraph(graphFixture);
+    expect(() =>
+      routeGraphEdges(graphFixture, layout, {
+        endpointPolicy: "unsupported" as never,
+      }),
+    ).toThrow("Unknown Graph routing endpointPolicy 'unsupported'");
+  });
 });

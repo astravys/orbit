@@ -65,6 +65,11 @@ export function routeGraphEdges(
 ): GraphRouting {
   const lookups = createLookups(layout);
   const endpointPolicy = options.endpointPolicy ?? "explicit";
+  if (!isEndpointPolicy(endpointPolicy)) {
+    throw new RangeError(
+      `Unknown Graph routing endpointPolicy '${String(endpointPolicy)}'.`,
+    );
+  }
   const targetClearance = options.targetClearance ?? 0;
   if (!Number.isFinite(targetClearance) || targetClearance < 0) {
     throw new RangeError(
@@ -77,6 +82,12 @@ export function routeGraphEdges(
       routeEdge(edge, lookups, endpointPolicy, targetClearance),
     ),
   };
+}
+
+function isEndpointPolicy(
+  value: unknown,
+): value is NonNullable<GraphRoutingOptions["endpointPolicy"]> {
+  return value === "explicit" || value === "nearest-node-boundary";
 }
 
 function createLookups(layout: GraphLayout): LayoutLookups {
