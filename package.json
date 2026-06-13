@@ -21,6 +21,7 @@
     "@orbit/core": "workspace:*",
     "@orbit/family-graph": "workspace:*",
     "@orbit/parser": "workspace:*",
+    "@orbit/render-primitives": "workspace:*",
     "@orbit/renderer-svg": "workspace:*",
     "@orbit/validator": "workspace:*",
     "@eslint/js": "^9.29.0",
