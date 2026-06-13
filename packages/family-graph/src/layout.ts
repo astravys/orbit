@@ -150,7 +150,7 @@ export function layoutGraph(
     resolved.margin + secondaryColumn * (columnWidth + resolved.columnGap);
   let secondaryY =
     primaryNodes.length === 0
-      ? resolved.margin
+      ? resolved.margin + contentOffset
       : primaryBottom + resolved.rowGap;
 
   for (const node of secondaryNodes) {

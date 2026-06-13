@@ -175,6 +175,20 @@ describe("Graph layout", () => {
     });
     expect(wide.nodes[0]!.width).toBeGreaterThan(300);
   });
+
+  it("keeps secondary-only nodes below document documentation", () => {
+    const layout = layoutGraph(
+      {
+        kind: "GraphModel",
+        documentation: "Document title",
+        nodes: [{ id: "legend", kind: "legend", title: "Legend" }],
+        edges: [],
+      },
+      { secondaryNodeKinds: ["legend"] },
+    );
+
+    expect(layout.nodes[0]?.y).toBe(94);
+  });
 });
 
 function overlaps(left: GraphLayoutNode, right: GraphLayoutNode): boolean {
