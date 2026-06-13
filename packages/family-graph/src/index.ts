@@ -76,3 +76,5 @@ export interface GraphModel {
   readonly documentation?: string;
   readonly metadata?: GraphMetadata;
 }
+
+export * from "./layout.js";

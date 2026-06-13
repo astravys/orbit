@@ -1,90 +1,39 @@
-import type {
-  ValidatedDatabaseModel,
-  ValidatedEnum,
-  ValidatedTable,
-} from "@orbit/core";
-
-interface Box {
-  readonly id: string;
-  readonly name: string;
-  readonly x: number;
-  readonly y: number;
-  readonly width: number;
-  readonly height: number;
-  readonly headerHeight: number;
-  readonly rowHeight: number;
-  readonly rows: readonly BoxRow[];
-  readonly documentation?: string;
-}
-
-interface BoxRow {
-  readonly text: string;
-  readonly key?: "PK" | "FK";
-}
+import type { ValidatedDatabaseModel } from "@orbit/core";
+import {
+  layoutGraph,
+  type GraphLayoutNode,
+  type GraphLayoutRow,
+  type GraphModel,
+  type GraphNode,
+  type GraphRow,
+} from "@orbit/family-graph";
+import { databaseToGraphModel } from "@orbit/validator";
 
 const margin = 40;
-const boxWidth = 300;
-const columnGap = 100;
-const rowGap = 56;
-const headerHeight = 38;
-const rowHeight = 28;
-const documentationLineHeight = 18;
-const documentHeaderHeight = 54;
 
 export function renderDatabaseSvg(model: ValidatedDatabaseModel): string {
-  const boxes = layout(model);
-  const width = Math.max(
-    640,
-    ...boxes.map((box) => box.x + box.width + margin),
+  const graph = databaseToGraphModel(model);
+  const layout = layoutGraph(graph, {
+    secondaryNodeKinds: ["database.enum"],
+  });
+  const graphNodes = new Map(graph.nodes.map((node) => [node.id, node]));
+  const enumIndexes = new Map(
+    graph.nodes
+      .filter((node) => node.kind === "database.enum")
+      .map((node, index) => [node.id, index] as const),
   );
-  const height = Math.max(
-    240,
-    ...boxes.map((box) => box.y + box.height + margin),
+  const layoutNodes = new Map(layout.nodes.map((node) => [node.id, node]));
+  const rows = new Map(
+    layout.nodes.flatMap((node) =>
+      node.rows.map((row) => [`${node.id}:${row.rowId}`, row] as const),
+    ),
   );
-  const tableBoxes = new Map(
-    boxes
-      .filter((box) => box.id.startsWith("table-"))
-      .map((box) => [box.name, box]),
-  );
-
-  const relationships = model.relationships
-    .map((relationship, index) => {
-      const source = tableBoxes.get(relationship.source.table.name);
-      const target = tableBoxes.get(relationship.target.table.name);
-      if (source === undefined || target === undefined) {
-        return "";
-      }
-      const sourceColumnIndex = relationship.source.table.columns.findIndex(
-        (column) => column.name === relationship.source.column.name,
-      );
-      const targetColumnIndex = relationship.target.table.columns.findIndex(
-        (column) => column.name === relationship.target.column.name,
-      );
-      const sourceIsLeft = source.x < target.x;
-      const startX = sourceIsLeft ? source.x + source.width : source.x;
-      const startY =
-        source.y +
-        source.headerHeight +
-        sourceColumnIndex * source.rowHeight +
-        source.rowHeight / 2;
-      const endX = sourceIsLeft ? target.x - 8 : target.x + target.width + 8;
-      const endY =
-        target.y +
-        target.headerHeight +
-        targetColumnIndex * target.rowHeight +
-        target.rowHeight / 2;
-      const middleX = (startX + endX) / 2;
-      return [
-        `<path id="relationship-${index}-${slug(relationship.name)}" class="relationship" d="M ${startX} ${startY} H ${middleX} V ${endY} H ${endX}" marker-end="url(#arrow)" />`,
-        `<title>${escapeXml(relationship.name)}</title>`,
-      ].join("");
-    })
-    .join("\n");
-
+  const relationships = renderRelationships(graph, layoutNodes, rows);
   const title = model.documentation ?? "ORBIT database schema";
+
   return [
     `<?xml version="1.0" encoding="UTF-8"?>`,
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="orbit-title orbit-description">`,
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${layout.width}" height="${layout.height}" viewBox="0 0 ${layout.width} ${layout.height}" role="img" aria-labelledby="orbit-title orbit-description">`,
     `<title id="orbit-title">${escapeXml(title.split("\n")[0] ?? title)}</title>`,
     `<desc id="orbit-description">${escapeXml(title)}</desc>`,
     `<defs>`,
@@ -97,146 +46,119 @@ export function renderDatabaseSvg(model: ValidatedDatabaseModel): string {
       ? ""
       : `<text class="document-title" x="${margin}" y="30">${escapeXml(model.documentation.split("\n")[0] ?? model.documentation)}</text>`,
     relationships,
-    boxes.map(renderBox).join("\n"),
+    layout.nodes
+      .map((node) => {
+        const graphNode = graphNodes.get(node.id);
+        return graphNode === undefined
+          ? ""
+          : renderNode(node, graphNode, enumIndexes.get(graphNode.id) ?? -1);
+      })
+      .join("\n"),
     `</svg>`,
     "",
   ].join("\n");
 }
 
-function layout(model: ValidatedDatabaseModel): Box[] {
-  const foreignKeys = new Set(
-    model.relationships.map(
-      (relationship) =>
-        `${relationship.source.table.name}.${relationship.source.column.name}`,
-    ),
-  );
-  const tables: Box[] = [];
-  let tableY =
-    margin + (model.documentation === undefined ? 0 : documentHeaderHeight);
-  for (let index = 0; index < model.tables.length; index += 2) {
-    const left = tableBox(model.tables[index]!, 0, tableY, foreignKeys);
-    const rightTable = model.tables[index + 1];
-    const right =
-      rightTable === undefined
-        ? undefined
-        : tableBox(rightTable, 1, tableY, foreignKeys);
-    tables.push(left);
-    if (right !== undefined) {
-      tables.push(right);
-    }
-    tableY += Math.max(left.height, right?.height ?? 0) + rowGap;
-  }
-  const enumX = margin + boxWidth + columnGap;
-  let enumY =
-    model.tables.length === 0
-      ? margin
-      : Math.max(...tables.map((box) => box.y + box.height)) + rowGap;
-  const enums = model.enums.map((enumeration, index) => {
-    const box = enumBox(enumeration, index, enumX, enumY);
-    enumY += box.height + rowGap;
-    return box;
-  });
-  return [...tables, ...enums];
-}
-
-function tableBox(
-  table: ValidatedTable,
-  column: number,
-  y: number,
-  foreignKeys: ReadonlySet<string>,
-): Box {
-  const documentationHeight =
-    table.documentation === undefined ? 0 : documentationLineHeight + 8;
-  return {
-    id: `table-${slug(table.name)}`,
-    name: table.name,
-    x: margin + column * (boxWidth + columnGap),
-    y,
-    width: boxWidth,
-    height:
-      headerHeight + documentationHeight + table.columns.length * rowHeight,
-    headerHeight: headerHeight + documentationHeight,
-    rowHeight,
-    rows: table.columns.map((tableColumn) => {
-      const properties =
-        tableColumn.properties.length === 0
-          ? ""
-          : ` [${tableColumn.properties.join(", ")}]`;
-      const key = tableColumn.properties.includes("pk")
-        ? "PK"
-        : foreignKeys.has(`${table.name}.${tableColumn.name}`)
-          ? "FK"
-          : undefined;
-      return {
-        text: `${tableColumn.name}: ${tableColumn.typeName}${properties}`,
-        ...(key === undefined ? {} : { key }),
-      };
-    }),
-    ...(table.documentation === undefined
-      ? {}
-      : { documentation: table.documentation }),
-  };
-}
-
-function enumBox(
-  enumeration: ValidatedEnum,
-  index: number,
-  x: number,
-  y: number,
-): Box {
-  const documentationHeight =
-    enumeration.documentation === undefined ? 0 : documentationLineHeight + 8;
-  return {
-    id: `enum-${index}-${slug(enumeration.name)}`,
-    name: enumeration.name,
-    x,
-    y,
-    width: boxWidth,
-    height:
-      headerHeight +
-      documentationHeight +
-      enumeration.members.length * rowHeight,
-    headerHeight: headerHeight + documentationHeight,
-    rowHeight,
-    rows: enumeration.members.map((member) => ({ text: member })),
-    ...(enumeration.documentation === undefined
-      ? {}
-      : { documentation: enumeration.documentation }),
-  };
-}
-
-function renderBox(box: Box): string {
-  const headerClass = box.id.startsWith("enum-") ? "enum-header" : "header";
-  const documentation = box.documentation?.split("\n")[0];
-  const rows = box.rows
-    .map((row, index) => {
-      const y = box.y + box.headerHeight + index * box.rowHeight;
-      const rowClass =
-        row.key === "PK"
-          ? "row row-pk"
-          : row.key === "FK"
-            ? "row row-fk"
-            : "row";
+function renderRelationships(
+  graph: GraphModel,
+  nodes: ReadonlyMap<string, GraphLayoutNode>,
+  rows: ReadonlyMap<string, GraphLayoutRow>,
+): string {
+  return graph.edges
+    .map((edge, index) => {
+      const source = nodes.get(edge.source.nodeId);
+      const target = nodes.get(edge.target.nodeId);
+      const sourceRow =
+        edge.source.rowId === undefined
+          ? undefined
+          : rows.get(`${edge.source.nodeId}:${edge.source.rowId}`);
+      const targetRow =
+        edge.target.rowId === undefined
+          ? undefined
+          : rows.get(`${edge.target.nodeId}:${edge.target.rowId}`);
+      if (
+        source === undefined ||
+        target === undefined ||
+        sourceRow === undefined ||
+        targetRow === undefined
+      ) {
+        return "";
+      }
+      const sourceIsLeft = source.x < target.x;
+      const startX = sourceIsLeft ? source.x + source.width : source.x;
+      const startY = sourceRow.y + sourceRow.height / 2;
+      const endX = sourceIsLeft ? target.x - 8 : target.x + target.width + 8;
+      const endY = targetRow.y + targetRow.height / 2;
+      const middleX = (startX + endX) / 2;
       return [
-        `<line class="divider" x1="${box.x}" y1="${y}" x2="${box.x + box.width}" y2="${y}" />`,
-        row.key === undefined
-          ? ""
-          : `<text class="key-badge ${rowClass}" x="${box.x + 12}" y="${y + 18}">${row.key}</text>`,
-        `<text class="${rowClass}" x="${box.x + (row.key === undefined ? 12 : 38)}" y="${y + 19}">${escapeXml(row.text)}</text>`,
+        `<path id="relationship-${index}-${slug(edge.label ?? edge.id)}" class="relationship" d="M ${startX} ${startY} H ${middleX} V ${endY} H ${endX}" marker-end="url(#arrow)" />`,
+        `<title>${escapeXml(edge.label ?? edge.id)}</title>`,
       ].join("");
     })
     .join("\n");
+}
+
+function renderNode(
+  layoutNode: GraphLayoutNode,
+  graphNode: GraphNode,
+  enumIndex: number,
+): string {
+  const headerClass =
+    graphNode.kind === "database.enum" ? "enum-header" : "header";
+  const documentation = graphNode.documentation?.split("\n")[0];
+  const graphRows = new Map(
+    (graphNode.compartments ?? []).flatMap((compartment) =>
+      compartment.rows.map((row) => [row.id, row] as const),
+    ),
+  );
+  const rows = layoutNode.rows
+    .map((row) => {
+      const graphRow = graphRows.get(row.rowId);
+      return graphRow === undefined ? "" : renderRow(row, graphRow);
+    })
+    .join("\n");
   return [
-    `<g id="${box.id}">`,
-    `<rect class="box" x="${box.x}" y="${box.y}" width="${box.width}" height="${box.height}" rx="6" />`,
-    `<path class="${headerClass}" d="M ${box.x + 6} ${box.y} H ${box.x + box.width - 6} Q ${box.x + box.width} ${box.y} ${box.x + box.width} ${box.y + 6} V ${box.y + box.headerHeight} H ${box.x} V ${box.y + 6} Q ${box.x} ${box.y} ${box.x + 6} ${box.y} Z" />`,
-    `<text class="title" x="${box.x + 12}" y="${box.y + 24}">${escapeXml(box.name)}</text>`,
+    `<g id="${renderNodeId(graphNode, enumIndex)}">`,
+    `<rect class="box" x="${layoutNode.x}" y="${layoutNode.y}" width="${layoutNode.width}" height="${layoutNode.height}" rx="6" />`,
+    `<path class="${headerClass}" d="M ${layoutNode.x + 6} ${layoutNode.y} H ${layoutNode.x + layoutNode.width - 6} Q ${layoutNode.x + layoutNode.width} ${layoutNode.y} ${layoutNode.x + layoutNode.width} ${layoutNode.y + 6} V ${layoutNode.y + layoutNode.headerHeight} H ${layoutNode.x} V ${layoutNode.y + 6} Q ${layoutNode.x} ${layoutNode.y} ${layoutNode.x + 6} ${layoutNode.y} Z" />`,
+    `<text class="title" x="${layoutNode.x + 12}" y="${layoutNode.y + 24}">${escapeXml(graphNode.title)}</text>`,
     documentation === undefined
       ? ""
-      : `<text class="documentation" x="${box.x + 12}" y="${box.y + 45}">${escapeXml(documentation)}</text>`,
+      : `<text class="documentation" x="${layoutNode.x + 12}" y="${layoutNode.y + 45}">${escapeXml(documentation)}</text>`,
     rows,
     `</g>`,
   ].join("\n");
+}
+
+function renderRow(layoutRow: GraphLayoutRow, graphRow: GraphRow): string {
+  const key = graphRow.badges?.some((badge) => badge.label === "PK")
+    ? "PK"
+    : graphRow.badges?.some((badge) => badge.label === "FK")
+      ? "FK"
+      : undefined;
+  const rowClass =
+    key === "PK" ? "row row-pk" : key === "FK" ? "row row-fk" : "row";
+  const text = rowText(graphRow);
+  return [
+    `<line class="divider" x1="${layoutRow.x}" y1="${layoutRow.y}" x2="${layoutRow.x + layoutRow.width}" y2="${layoutRow.y}" />`,
+    key === undefined
+      ? ""
+      : `<text class="key-badge ${rowClass}" x="${layoutRow.x + 12}" y="${layoutRow.y + 18}">${key}</text>`,
+    `<text class="${rowClass}" x="${layoutRow.x + (key === undefined ? 12 : 38)}" y="${layoutRow.y + 19}">${escapeXml(text)}</text>`,
+  ].join("");
+}
+
+function rowText(row: GraphRow): string {
+  const properties = row.metadata?.["properties"];
+  return Array.isArray(properties) && properties.length > 0
+    ? `${row.label} [${properties.join(", ")}]`
+    : row.label;
+}
+
+function renderNodeId(node: GraphNode, enumIndex: number): string {
+  return node.kind === "database.enum"
+    ? `enum-${enumIndex}-${slug(node.title)}`
+    : `table-${slug(node.title)}`;
 }
 
 function slug(value: string): string {
