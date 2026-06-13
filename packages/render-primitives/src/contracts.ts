@@ -47,6 +47,12 @@ export type RenderPathCommand =
   | RenderCloseCommand;
 
 interface RenderPrimitiveBase {
+  /**
+   * Stable logical identity within the render model.
+   *
+   * Output serializers may omit it when the target format has no matching
+   * identity concept or when emitting it would change a compatibility format.
+   */
   readonly id: string;
   readonly styleRole?: string;
   readonly semanticKind?: string;

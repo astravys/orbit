@@ -134,4 +134,18 @@ describe("SVG primitive serializer", () => {
       renderDocumentToSvg({ ...document, primitives: [primitive] }),
     ).toThrow("Unsupported SVG style role");
   });
+
+  it("rejects invalid text attribute values at runtime", () => {
+    const invalidText = {
+      kind: "RenderText",
+      id: "invalid-anchor",
+      x: 0,
+      y: 0,
+      text: "text",
+      anchor: `start" onload="alert(1)`,
+    } as unknown as RenderPrimitive;
+    expect(() =>
+      renderDocumentToSvg({ ...document, primitives: [invalidText] }),
+    ).toThrow("Unsupported SVG text anchor");
+  });
 });

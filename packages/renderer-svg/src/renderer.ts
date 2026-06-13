@@ -122,9 +122,13 @@ function serializeRect(rect: RenderRect): string {
 
 function serializeText(text: RenderText): string {
   const anchor =
-    text.anchor === undefined ? "" : ` text-anchor="${text.anchor}"`;
+    text.anchor === undefined
+      ? ""
+      : ` text-anchor="${textAnchor(text.anchor)}"`;
   const baseline =
-    text.baseline === undefined ? "" : ` dominant-baseline="${text.baseline}"`;
+    text.baseline === undefined
+      ? ""
+      : ` dominant-baseline="${textBaseline(text.baseline)}"`;
   return `<text${classAttribute(text.styleRole)} x="${coordinate(text.x)}" y="${coordinate(text.y)}"${anchor}${baseline}>${escapeXml(text.text)}</text>`;
 }
 
@@ -190,6 +194,20 @@ const styleClasses: Readonly<Record<string, string>> = {
   "badge.foreign-key": "key-badge row row-fk",
   "edge.relationship": "relationship",
 };
+
+function textAnchor(value: RenderText["anchor"]): string {
+  if (value === "start" || value === "middle" || value === "end") {
+    return value;
+  }
+  throw new Error(`Unsupported SVG text anchor '${String(value)}'.`);
+}
+
+function textBaseline(value: RenderText["baseline"]): string {
+  if (value === "auto" || value === "middle" || value === "hanging") {
+    return value;
+  }
+  throw new Error(`Unsupported SVG text baseline '${String(value)}'.`);
+}
 
 function coordinate(value: number): string {
   if (!Number.isFinite(value)) {
